@@ -1,0 +1,10 @@
+@"
+  CONNECT scott/tiger
+  SPOOL /u01/emp.lst
+  SET LINESIZE 100
+  SET PAGESIZE 50
+  SELECT *
+  FROM emp;
+  SPOOL OFF
+  EXIT;
+"@ | sqlplus.exe /nolog
