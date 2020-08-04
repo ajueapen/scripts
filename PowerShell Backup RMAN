@@ -1,0 +1,6 @@
+@"
+RUN {
+  BACKUP DATABASE PLUS ARCHIVELOG;
+}
+EXIT;
+"@ | rman target=/
