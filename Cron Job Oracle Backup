@@ -1,0 +1,5 @@
+[oracle@database scripts]$ crontab -l
+# Perform full backup on database Sunday at 3:05 am
+5 3 * * 0 /$HOME/scripts/backup_db database_name full > /$HOME/scripts/logs/full_backup.log
+# Perform incremental backups on database Mon-Sat at 3:05 am
+5 3 * * 1-6 /$HOME/scripts/backup_db database_name inc > /$HOME/scripts/logs/inc_backup.log
