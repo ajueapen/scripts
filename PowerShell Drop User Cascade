@@ -1,0 +1,64 @@
+Example script for drop user with tablespace tablespace_username including contents and datafiles usage 
+./drop_user.ps1  username
+
+-----------
+
+param(
+[string]$name_user = ""
+)
+
+Write-Host "NAME_USER: $name_user"
+
+##!!!!! ORA-01940: cannot drop a user that is currently connected
+## USER must disconnect before drop user!!!
+
+#Dropping Users
+#Dropping users is very straightforward and is accomplished with the drop user command. The
+#only parameters are the username to be dropped and the cascade option; any objects owned by
+#the user must be explicitly dropped or moved to another schema if the cascade option is not used.
+
+$username_dba = "system"
+$password_dba = "manager"
+$tnsalias_db = "test-ecdu"
+$full_name_user=$name_user   
+#
+$user_tablespace = "tablespace_"
+$default_tablespace_user = $user_tablespace+$name_user
+#
+Write-Host "USER default_tablespace: $default_tablespace_user"
+
+
+#Make SQL DROP TABLESPACE
+# The database also automatically drops from the operating system any Oracle-managed datafiles and tempfiles in the tablespace. 
+#Other datafiles and tempfiles are not removed from the operating system unless you specify INCLUDING CONTENTS AND DATAFILES.
+$sqlQuery_drop_tablespace = @"
+set NewPage none
+set heading off
+set feedback off
+WHENEVER SQLERROR continue
+DROP TABLESPACE  $default_tablespace_user INCLUDING CONTENTS AND DATAFILES
+;
+"@
+
+#Degug display "SQL Tablespace: $sqlQuery_drop_tablespace"
+#Specify CASCADE to drop all objects in the user's schema before dropping the user. 
+#You must specify this clause to drop a user whose schema contains any objects.
+Write-Host "SQL Drop Tablespace: $sqlQuery_drop_tablespace"
+#
+$sqlQuery_drop_user = 
+@"
+
+DROP USER $full_name_user CASCADE 
+;
+exit
+"@
+
+
+$sqlQuery = $sqlQuery_drop_tablespace + $sqlQuery_drop_user
+
+# Degug display  $sqlQuery = $sqlQuery_drop_tablespace + $sqlQuery_drop_user
+Write-Host $sqlQuery   
+$sqlOutput = $sqlQuery | sqlplus -silent $username_dba/$password_dba@$tnsalias_db
+
+# Degug display result SQL
+Write-Host  $sqlOutput
