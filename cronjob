@@ -1,0 +1,15 @@
+https://linuxize.com/post/scheduling-cron-jobs-with-crontab/
+
+Run a PHP script every 2 minutes and write the output to a file :
+
+*/2 * * * * /usr/bin/php /path/to/script.php >> /var/log/script.log
+
+Run a script every day, every hour, on the hour, from 8 AM through 4 PM:
+
+00 08-16 * * * /path/to/script.sh
+Run a script on the first Monday of each month, at 7 a.m.
+
+0 7 1-7 * 1 /path/to/script.sh
+Run the a script at 9:15pm, on the 1st and 15th of every month:
+
+15 9 1,15 * * /path/to/script.sh
