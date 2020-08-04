@@ -1,0 +1,7 @@
+#!/bin/ksh
+rman target=/ << EOF
+RUN {
+  BACKUP DATABASE PLUS ARCHIVELOG;
+}
+EXIT;
+EOF
